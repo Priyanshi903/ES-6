@@ -1,0 +1,330 @@
+<html>
+
+<head>
+    <script>
+        /*
+        function hello(thing) {
+            console.log(thing.length);//5
+            for (let i = 0; i < thing.length; i++) {
+                console.log(thing[i]);//w o r l d
+            }
+            console.log(this);//String {"Priyanshi"}
+            console.log(this + " says hello " + thing);
+        }
+        //welcome ignored
+        //Priyanshi is this(calling object) and others are arguments
+        hello.call("Priyanshi", "world", "welcome");
+
+
+        function hellonew(thing) {
+            console.log(this);//window
+            console.log("Hello " + thing);//Hello World
+        }
+
+        // this:
+        hellonew("world");
+
+        // desugars to:                (before ES5 window was there instead of undefined)
+        hellonew.call(undefined, "world");*/
+
+        /*
+                //Member Functions
+                var person = {
+                    name: "Brendan Eich",
+                    hello: function (thing) {
+                        console.log(this);//person
+                        //The default conversion from an object to string is "[object Object]".
+                        console.log(this + " says hello " + thing);
+                        for (var property in this) {
+                            console.log(property + "=" + this[property]);
+                        }
+                    }
+                }
+        
+                // this:
+                person.hello("world")
+        
+        // desugars to this:
+          person.hello.call(person, "world");*/
+
+        /*
+                function hello(thing) {
+                    console.log(this);//person
+                    console.log(this + " says hello " + thing);//[object Object] says hello world1
+                }
+        
+                person = { name: "Brendan Eich" }
+                //attach fun to object dynamically, notice no parenthesis()
+                //reference of hello is being passed instead of calling func
+                person.hello2 = hello;
+                person.hello2("world1") // still desugars to person.hello.call(person, "world")
+        
+                hello("world2") // [object Window] says hello world2
+                */
+
+        /*
+                var person = {
+                    name: "Brendan Eich",
+                    hello: function (thing) {
+                        console.log(this);//person
+                        console.log(this.name + " says hello " + thing);//Brendan Eich says hello world
+                    }
+                }
+                var boundHello = function (thing) {
+                    console.log(this);//window
+                    return person.hello(thing);
+                }
+                boundHello("world");
+                */
+
+        /*
+        //this in objects:-
+                //arrow vs regular function
+                const person = {
+                    firstName: 'Priyanshi',
+                    lastName: 'Chauhan',
+                    fullname: function () {
+                        console.log('function expression inside object:-');
+                        console.log(this);//person object(parent scope)
+                        console.log(`${this.firstName} ${this.lastName}`);
+                    },
+                    greet: () => {
+                        console.log("Arrow function inside object:-");
+                        console.log(this);//window object
+                        namastey = () => {
+                            console.log("Arrow func inside arrow func of object:-");
+                            console.log(this);//window object
+                        }
+                        namastey();
+                    }
+                }
+                //global scope
+                function hello() {
+                    console.log("Func stmt outest:-");
+                    console.log(this);//window object
+                }
+                // script scope(global)
+                //arrow fun take this from lexical environement i.e.,window here
+                const welcome = () => {
+                    console.log("Arrow function outest:-")
+                    console.log(this);//window object,arrow func do not get there 'this'
+                }
+                const greet = function () {
+                    console.log("function expression outest:-");
+                    console.log(this);//window
+                }
+                hello();
+                welcome();
+                greet();
+                person.fullname();
+                person.greet();
+                const p = person.greet;
+                p();//same as person.greet();....window
+                const f = person.fullname;//window, firstname&lastname:undefined
+                f();
+        */
+
+        /*
+        //this in constructor functions:-
+        //not necessary to write this.variable_name
+        const Book = function (bookId, bookName) {
+            this.bookId = bookId;
+            this.bookName = bookName;
+            //function stmt inside const func not possible
+            // function bookInfoStmt() {
+            //     console.log('Function stmt inside constructor func:-');
+            //     console.log(this);
+            // };
+            this.bookInfoExpr = function () {
+                console.log('Function expression inside constructor func:-');
+                console.log(`${bookId}:${bookName}`);
+                console.log(this);//Book {bookId: 101, bookName: "Harry Potter", bookInfoExpr: ƒ, bookInfoArrow: ƒ}
+            };
+            this.bookInfoArrow = () => {
+                console.log('Arrow Function inside constructor func:-');
+                console.log(`${bookId}:${bookName}`);
+                console.log(this);//Book {bookId: 101, bookName: "Harry Potter", bookInfoExpr: ƒ, bookInfoArrow: ƒ}
+            }
+        }
+
+        harryPotter = new Book(101, 'Harry Potter');
+        // harryPotter.bookInfoStmt();
+        harryPotter.bookInfoExpr();
+        harryPotter.bookInfoArrow();
+
+        //necessary to write this.variable_name
+        Book.prototype.getBookId = function () {
+            console.log('Adding function expression to constructor function using prototype:-');
+            console.log(this);//Book {bookId: 101, bookName: "Harry Potter", bookInfoExpr: ƒ, bookInfoArrow: ƒ}
+            console.log(`Book Id is:${this.bookId}`);//Book Id is:101
+        }
+        harryPotter.getBookId();
+        Book.prototype.getBookName = () => {
+            console.log('Adding arrow function to constructor function using prototype:-');
+            console.log(this);//undefined
+            console.log(`Book Name is:${this.bookName}`);//Book Name is:undefined Id is:101
+        }
+        //cannot bind arrow function??
+        // const c = Book.getBookName;
+        // const b = c.bind(this);
+        // harryPotter.b();
+
+        //this in ES6 class:-
+        //necessary to write this.variable_name
+        class Product {
+            constructor(productId, productName, producrPrice) {
+                this.productId = productId;
+                this.productName = productName;
+                this.producrPrice = producrPrice;
+            }
+            getProductDetailsStmt() {
+                console.log('Inside Function stmt in ES6:-');
+                console.log(`${this.productId}::${this.productName}::${this.producrPrice}`);
+                console.log(this);
+            }
+            getProductDetailsExpr = function () {
+                console.log('Inside Function expression in ES6:-');
+                console.log(`${this.productId}::${this.productName}::${this.producrPrice}`);
+                console.log(this);
+            }
+            getProductDetailsArrow = () => {
+                console.log('Inside arrow Function in ES6:-');
+                console.log(`${this.productId}::${this.productName}::${this.producrPrice}`);
+                console.log(this);
+
+            }
+        }
+        const iphone = new Product(101, 'IPHONE', 80000);
+        iphone.getProductDetailsStmt();//Product {productId: 101, productName: "IPHONE", producrPrice: 80000, getProductDetailsExpr: ƒ, getProductDetailsArrow: ƒ}
+        iphone.getProductDetailsExpr();//Product {productId: 101, productName: "IPHONE", producrPrice: 80000, getProductDetailsExpr: ƒ, getProductDetailsArrow: ƒ}
+        iphone.getProductDetailsArrow();//Product {productId: 101, productName: "IPHONE", producrPrice: 80000, getProductDetailsExpr: ƒ, getProductDetailsArrow: ƒ}
+
+        //arrow function cannot be used as a constructor function as they dont have constructor
+        //not necessary to write this.variable_name
+        const Student = (classNo, studentId, studentName) => {
+            this.classNo = classNo;
+            this.studentId = studentId;
+            this.studentName = studentName;
+            function getStudentDetailsStmt() {
+                console.log('Inside func stmt  of constructor function:-');
+                console.log(`${this.classNo}::${this.studentId}::${this.studentName}`);
+                console.log(this);
+            }
+            getStudentDetailsExpr = function () {
+                console.log('Inside func expression of constructor function:-');
+                console.log(`${this.classNo}::${this.studentId}::${this.studentName}`);
+                console.log(this);
+            }
+            getStudentDetailsArr = () => {
+                console.log('Inside arrow func of constructor function:-');
+                console.log(`${this.classNo}::${this.studentId}::${this.studentName}`);
+                console.log(this);
+            }
+        }
+        // const alisha = new Student(5, 'A15', 'Alisha Rai');
+        // alisha.getStudentDetailsStmt();
+        // alisha.getStudentDetailsExpr();
+        // alisha.getStudentDetailsArr();
+
+        //this in constructor function(function statement type)
+        function School(schoolId, noOfStudents) {
+            this.schoolId = schoolId;
+            this.noOfStudents = noOfStudents;
+            //function stmt cant be added
+            function getSchoolDetailsStmt() {
+                console.log('Inside func stmt  of constructor function:-');
+                console.log(`${this.schoolId}::${this.noOfStudents}`);
+                console.log(this);
+            }
+            this.getSchoolDetailsExpr = function () {
+                console.log('Inside func expression of constructor function:-');
+                console.log(`${schoolId}::${noOfStudents}`);
+                console.log(this);//School {schoolId: "B201", noOfStudents: 500, getSchoolDetailsExpr: ƒ, getSchoolDetailsArr: ƒ}
+            }
+            this.getSchoolDetailsArr = () => {
+                console.log('Inside arrow func of constructor function:-');
+                console.log(`${schoolId}::${noOfStudents}`);
+                console.log(this);//School {schoolId: "B201", noOfStudents: 500, getSchoolDetailsExpr: ƒ, getSchoolDetailsArr: ƒ}
+            }
+        }
+        const dav = new School('B201', 500);
+        // dav.getSchoolDetailsStmt();
+        dav.getSchoolDetailsExpr();
+        dav.getSchoolDetailsArr();
+        const kv = new School('B202', 1500);
+        kv.getSchoolDetailsExpr();
+        kv.getSchoolDetailsArr();*/
+
+        let a = {
+            name: 'Priya',
+            helloOutest: function () {
+                let year = '3';
+
+                //arrow func doesnt have there 'this', they take it from the first non-arrow function
+                hello = () => {
+                    let subject = 'cse';
+                    console.log(this);//{name: "Priya", helloOutest: ƒ}
+                    helloInside = () => {
+                        console.log(this);//{name: "Priya", helloOutest: ƒ}
+                        console.log(subject);//cse
+                        console.log(year);//3
+                    }
+                    helloInside();
+                }
+                hello();
+            }
+        }
+        a.helloOutest();
+
+        //helloInside nd hello are now in global scope and due to the closures we can access subject and year
+        helloInside();//without calling a.helloOutest(); we cannot access hello and helloOutside
+        // output:-
+        // {name: "Priya", helloOutest: ƒ}
+        // cse
+        // 3
+        hello();
+        // output:-
+        // {name: "Priya", helloOutest: ƒ}
+        // {name: "Priya", helloOutest: ƒ}
+        // cse
+        // 3
+
+        let school = {
+            schoolName: 'DAV',
+            schoolId: 101,
+            getSchool: function () {
+                let classs = {
+                    classNo: 3,
+                    classCode: 2001,
+                    getClassArr: () => {
+                        console.log('Arrow:-');
+                        console.log(this);
+                        console.log(`${this.classNo}::${this.classCode}`, `${this.schoolId}::${this.schoolName}`);
+                    },
+                    getClassReg: function () {
+                        console.log('Regular:-');
+                        console.log(this);
+                        console.log(`${this.classNo}::${this.classCode}`, `${this.schoolId}::${this.schoolName}`);
+
+                    }
+                }
+                classs.getClassArr();//{schoolName: "DAV", schoolId: 101, getSchool: ƒ}   undefined::undefined 101::DAV
+
+                //u cannot change 'this' for arrow func
+                classs.getClassArr.call(classs);////{schoolName: "DAV", schoolId: 101, getSchool: ƒ}   undefined::undefined 101::DAV
+
+                classs.getClassReg();//{classNo: 3, classCode: 2001, getClassArr: ƒ, getClassReg: ƒ} 3::2001 undefined::undefined
+
+                //changing this of regular function
+                classs.getClassReg.call(school);//{schoolName: "DAV", schoolId: 101, getSchool: ƒ} undefined::undefined 101::DAV
+            }
+        }
+        school.getSchool();
+    </script>
+</head>
+
+<body>
+    <h2>Learn 'this' keyword</h2>
+</body>
+
+</html>

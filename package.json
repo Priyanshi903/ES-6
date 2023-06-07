@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "bootstrap": "^3.4.1",
+    "g": "^2.0.1",
+    "node-fetch": "^3.2.4",
+    "xhr2": "^0.2.1"
+  }
+}

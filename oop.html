@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script>
+        /*//constructor functions
+        const Person = function (firstName, birthYear) {
+            console.log(this);//person {} ....in browser
+            //instance properties
+            this.firstName = firstName;
+            this.birthYear = birthYear;
+            //bad practise:never use instance method as it will duplicate with each object creation
+            // this.calcAge = function () {
+            //     console.log(2037 - this.birthYear);
+            // }
+        };
+        const priya = new Person('Priya', 1999);
+        // console.log(priya);//Person {firstName: "Priya", birthYear: 1999}
+        const alice = new Person('Alice', 1998);//objects r automatically returned nd can be seen in console without even consoling
+        console.log(priya instanceof Person);//true
+        console.log(Person.prototype);//{constructor: ƒ} ->calcAge: ƒ () constructor: ƒ (firstName, birthYear) __proto__: Object ....contains calcAge
+        Person.prototype.calcAge = function () {
+            console.log(2022 - this.birthYear);
+        }
+        priya.calcAge();//38
+        console.log(priya);//Person {firstName: "Priya", birthYear: 1999} ....it does not contains calcAge but still has access to it becz of prototype inheritance.
+        console.log(priya.__proto__);//{calcAge: ƒ, constructor: ƒ} ->calcAge: ƒ () constructor: ƒ (firstName, birthYear) __proto__: Object->contains calcAge,species,cons,etc
+        console.log(priya.__proto__ = Person.prototype);//true ...Person.prototype is used by all objects of Person
+        console.log(Person.prototype.isPrototypeOf(priya));//true
+        console.log(Person.prototype.isPrototypeOf(alice));//true
+        //we can add properties too using prototype
+        Person.prototype.species = 'Homo Sapiens';
+        console.log(priya.species, alice.species);//Homo Sapiens Homo Sapiens ...it is the inherited prop
+        console.log(priya.hasOwnProperty('firstName'));//true 
+        console.log(priya.hasOwnProperty('species'));//false ...only that declared inside cons object r its own prop, others r just inherited
+        console.log(priya.__proto__.__proto__);// ...Object.Prototype
+        console.log(priya.__proto__.__proto__.__proto__);//null
+        //adding property to built in object,not recommended
+        const arr = [1, 3, 6, 2, 4, 1, 4, 6, 6];
+        Array.prototype.unique = function () {
+            return [...new Set(this)];//notice 'this'
+        };
+        console.log(arr.unique());//[1, 3, 6, 2, 4]
+        const h1 = document.querySelectorAll('h1');
+        console.dir(h1);//currently not working
+
+        //ES6 classes
+        class PersonClass {
+            constructor(fullName, birthYear) {
+                this.fullName = fullName;
+                this.birthYear = birthYear;
+            }
+            //prototype methods r also called instance methods
+            //here methods automatically added to .prototype properties
+            calcAge() {
+                console.log(2022 - this.birthYear);
+            }
+            //setting a prop that already exists
+            set fullName(name) {
+                // console.log(name);
+                if (name.includes(' '))
+                    this._fullName = name;//fullName will give error as const too had this prop therefore _fullName
+                else
+                    alert(`${name} is not a full name`);
+            }
+            get fullName() {
+                return this._fullName;
+            }
+
+            //static method
+            static welcome() {
+                console.log('Welcome to OOP in JS');
+            }
+        }
+        const jessica = new PersonClass('Jessica', 1996);
+        console.log(jessica);//PersonClass {firstName: "Jessica", birthYear: 1996}
+        jessica.calcAge();//26
+        console.log(jessica.__proto__ === PersonClass.prototype);//true
+        PersonClass.prototype.greet = function () {
+            console.log(`Hey ${this.firstName}`);//without 'this' gives error:firstName is not defined
+        }
+        jessica.greet();//Hey Jessica
+
+        //getters nd setters
+        //not mandatory to specify setter if we have getter
+        const account = {
+            owner: 'Priya',
+            movements: [200, 570, 120, 300],
+            //getter
+            get latest() {
+                return this.movements.slice(-1).pop();
+            },
+            //setter
+            set latest(mov) {
+                this.movements.push(mov);
+            }
+        };
+        console.log(typeof account.latest);//number
+        //notice getter is called without parenthesis as it is prop not method
+        console.log(account.latest);//300
+        //notice how to use setter, it is a property
+        account.latest = 50;
+        console.log(account.movements);//[200, 570, 120, 300, 50]
+        const james = new PersonClass('James Bond', 1958);
+        console.log(james._fullName);//James Bond
+        console.log(james);//PersonClass {_fullName: "James Bond", birthYear: 1958} ...notice prop name fullname changed to _fullname
+
+        //static methods:attached to constructor method only not prototype,not available on instances
+        //Example:Array.from() is attached to the Array cons 
+        //adding static methods 
+        Person.hey = function () {
+            console.log(this);//entire constructor function as obj is calling the method
+            console.log('Hey There');
+        };
+        Person.hey();
+        // priya.hey();//error ...as it is not added to the prototype
+        PersonClass.welcome();//Welcome to OOP in JS
+
+
+        //Object.create()
+        const PersonProto = {
+            calcAge() {
+                console.log(2022 - this.birthYear);
+            },
+            //manual way, therefore can use any name
+            init(firstName, birthYear) {
+                this.firstName = firstName;
+                this.birthYear = birthYear;
+            }
+        }
+        const steven = Object.create(PersonProto);//steven has PersonProto prototype
+        console.log(steven);//birthYear: 1967 name: "Steven"  __proto__: Object ....exactly same as PersonProto doubt:not getting calcAge in console here
+        steven.name = 'Steven';
+        steven.birthYear = 1967;
+        steven.calcAge();//55
+        console.log(steven.__proto__ === PersonProto.prototype);//false
+        console.log(steven.__proto__ === PersonProto);//true
+        const sarah = Object.create(PersonProto);//steven has PersonProto prototype
+        sarah.init("Sarah", 1982);
+        sarah.calcAge();//40
+
+        //inheritance in constructor function:
+        const PersonInher = function (firstName, birthYear) {
+            this.firstName = firstName;
+            this.birthYear = birthYear;
+        };
+        PersonInher.prototype.calcAge = function () {
+            console.log(2022 - this.birthYear);
+        }
+        //property names should be same in both , if fullName instead of firstname then it will give undefined
+        const Student = function (firstName, birthYear, course) {
+            PersonInher.call(this, firstName, birthYear);//call is used to specify this otherwise it is normal function call that will give error as this is not defined
+            this.course = course;
+        };
+
+        //Linking prototypes
+        Student.prototype = Object.create(PersonInher.prototype);
+
+        Student.prototype.introduce = function () {
+            console.log(`My name is ${this.firstName} and I study ${this.course}`);//My name is Nike and I study computer science
+        };
+
+        Student.prototype.constructor = Student;//otherwise nike.__proto__ will give PersonInher which is logically not true, becz of inheritance Student.prototype.constructor became PersonInher
+
+        const nike = new Student('Nike', 2001, 'computer science');
+        console.log(nike instanceof PersonInher);//true
+        console.log(nike instanceof Student);//true
+        console.log(Student.prototype.constructor);//Person constructor if line no. 164 not written otherwise Student constructor
+        nike.introduce();
+        console.log(nike.firstName);//Nike
+        nike.calcAge();//21 ...error if line no.158 not present, we have to link prototypes
+        console.log(nike.__proto__);//Student{...}
+        console.log(nike.__proto__.__proto__);//{Person.Prototype}
+
+
+        //inheritance in ES6 classes:
+        class PersonInherInClass {
+            constructor(fullName, birthYear) {
+                this.fullName = fullName;
+                this.birthYear = birthYear;
+            }
+            set fullName(name) {
+
+                if (name.includes(' '))
+                    this._fullName = name;
+                else
+                    alert(`${name} is not a full name`);
+            }
+            get fullName() {
+                return this._fullName;
+            }
+            calcAge() {
+                console.log(2022 - this.birthYear);
+            }
+        };
+        class StudentInherInClass extends PersonInherInClass {
+            constructor(fullName, birthYear, course) {
+                //always super() is first
+                super(fullName, birthYear);
+                //if we dont have any other prop than super class prop then we dont need to call super, it is automatically called
+                this.course = course;
+            }
+            introduce() {
+                console.log(`My name is ${this.fullName} and I study ${this.course}`);//My name is Nike and I study computer science
+            }
+            //method overriding:child class method will be called
+            calcAge() {
+                console.log(`${2022 - this.birthYear} from student class`);
+            }
+        };
+        const martha = new StudentInherInClass('Martha Nicklodean', 2012, 'History');
+        const jonas = new StudentInherInClass('Jonas Varsha', 2000);
+        martha.introduce();//My name is Martha Nicklodean and I study History
+        martha.calcAge();//10 from student class
+
+
+        //inheritance in Object.create()
+        const PersonProtoInher = {
+            calcAge() {
+                console.log(2022 - this.birthYear);
+            },
+            init(fullName, birthYear) {
+                this.fullName = fullName;
+                this.birthYear = birthYear;
+            }
+        }
+        const StudentProtoInher = Object.create(PersonProtoInher);
+        StudentProtoInher.init = function (fullName, birthYear, course) {
+            PersonProtoInher.init.call(this, fullName, birthYear);
+            this.course = course;
+        }
+        StudentProtoInher.introduce = function () {
+            console.log(`My name is ${this.fullName} and I study ${this.course}`);//My name is Nike and I study computer science
+        }
+        const jay = Object.create(StudentProtoInher);
+        jay.init('Jay', 1999, 'Arts');
+        console.log(jay);//{fullName: "Jay", birthYear: 1999, course: "Arts"}
+        jay.introduce();//My name is Jay and I study Arts
+        jay.calcAge();//23
+        const mahima = Object.create(StudentProtoInher);
+        mahima.init('Mahima', 1997, 'Biology');
+
+
+        //another class example
+        class Account {
+
+            //public fields:outside constructor nd r only on instances not for prototype,behaving same even if inside constructor
+            // _movements = [];
+            locale = navigator.language;
+
+            //private fields(#)
+            #movements = [];
+            //pin is a variable that is passed to the constructor therefore we need to write it in both places
+            #pin;//undefined in the starting
+
+            //Public methods:all methods r public methods here
+
+            //Private Method:not yet properly implemented
+            // #approveLoan(val) {
+            //     return true;
+            // }
+
+            //static field
+            static account_Bank = 'SBI';
+
+            constructor(owner, currency, pin) {
+                this.owner = owner;
+                this.currency = currency;
+
+                //Protected prop, by adding _ is a convention to be followed but still we can add
+                // this._pin = pin;
+                // this._movements = [];
+                // this.locale = navigator.language;//locale: "en-US"
+
+                //notice private pin
+                this.#pin = pin;
+            }
+            getMovements() {
+                return this.#movements;
+            }
+
+            deposit(val) {
+                this.#movements.push(val);
+                return this;
+            }
+
+            withdraw(val) {
+                this.deposit(-val);
+                return this;
+            }
+
+            //private method(notice just a convention)
+            // _approveLoan(val) {
+            //     return true;
+            // }
+
+            //static method:available on class only not instances
+            static helper() {
+                console.log('I am static method of account');
+            }
+        }
+        const account_1 = new Account('priyanshi', 'Rupee', 1111);
+        account_1.deposit(250);
+        account_1.withdraw(100);
+        console.log(account_1);
+        // console.log(account_1._pin);//1111 ...it is accessible as adding _ is just a convention to tell that method or prop is private
+
+        //new class fields added to js:public field,private field,public method,private method
+        // console.log(account_1.#movements);//Private field '#movements' must be declared in an enclosing class
+        // console.log(account_1.#pin);//same as above
+        // console.log(account_1.#approveLoan);//same
+
+        //chaining methods
+        // account_1.deposit(500).deposit(200).withdraw(150) //will give error if we do not return 'this' from these methods as they r returning undefined
+        //account_1.deposit(500) returns undefined nd for further method calling we need object therefore we added return this; in every method
+        account_1.deposit(500).deposit(200).withdraw(150);
+        console.log(account_1.getMovements());//[250, -100, 500, 200, -150]
+        */
+
+        prototypeOfFunction = function () {
+            console.log('hello');
+        }
+        Object.getPrototypeOf(prototypeOfFunction);
+
+        const personPrototype = {
+            greet() {
+                console.log(`hello, my name is ${this.name}!`);
+            }
+        }
+
+        function Person(name) {
+            this.name = name;
+        }
+
+        Person.prototype = personPrototype;
+        // Person.prototype.constructor = Person;
+
+    </script>
+</head>
+
+<body>
+    <h1>Welcome to OOP in Javascript</h1>
+    <p>Every object in JavaScript has a built-in property, which is called its prototype. The prototype is itself an
+        object, so the prototype will have its own prototype, making what's called a prototype chain. The chain ends
+        when we reach a prototype that has null for its own prototype.In practice all browsers use __proto__. The
+        standard way to access an object's prototype is the Object.getPrototypeOf() method.</p>
+</body>
+
+</html>

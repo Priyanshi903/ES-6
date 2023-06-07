@@ -1,0 +1,18 @@
+img{
+    width: 100%;
+}
+.countries{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; 
+    /*display: grid;
+    gap: 3rem;
+    grid-template-columns: repeat(auto-fit,minmax(25vw,1fr));*/
+}
+.card{
+    border: 1px solid black;
+    position: relative;
+    width: 25vw;
+    padding: 1rem;
+    box-shadow: 5px 5px black;
+}

@@ -1,0 +1,144 @@
+<html>
+
+<head>
+    <script>
+        /*closures
+        function x() {
+            // console.log("hii")
+            // return function y() { }
+        }
+        var a = x();
+        var b = x;
+        console.log(a);
+        console.log(b);*/
+
+        /*
+        // function x() {
+        //     var i = 1;
+        //     setTimeout(function () {
+        //         console.log(i);
+        //     }, 3000);
+        //     console.log("Show must go on");
+        // }
+        // x();
+        function y() {
+            for (var i = 1; i <= 5; i++) {
+                setTimeout(function () {
+                    console.log(i);
+                }, i * 1000);
+
+            }
+        }
+        function z() {
+            for (let i = 1; i <= 5; i++) {
+                setTimeout(function () {
+                    console.log(i);
+                }, i * 1000);
+
+            }
+        }
+        function u() {
+
+            for (var i = 1; i <= 5; i++) {
+                function close(j) {
+                    setTimeout(function () {
+                        console.log(i);
+                    }, i * 1000);
+                }
+                close(j);
+            }
+
+        }
+        //output:6 ,5 times
+        // y();
+        //output:1 2 3 4 5
+        // z();
+        // output:1 2 3 4 5
+        u();*/
+
+        /*
+                //arrow vs regular function
+                const welcome = () => {
+                    console.log(this);//window
+                    console.log("welcome to JS")
+                }
+                // welcome();
+                function hello() {
+                    console.log(this);//window
+                    console.log("Hello World");
+                }
+                // hello();
+                const greet = function () {
+                    console.log(this);//undefined
+                    console.log("function expression");
+                }
+                // greet();
+                const person = {
+                    firstName: 'Priyanshi',
+                    lastName: 'Chauhan',
+                    z: 65,
+                    fullname: function () {
+                        console.log(this);
+                        console.log(`${this.firstName} ${this.lastName}`);
+                    },
+                    greet: () => {
+                        console.log(this.z);
+                        console.log("Welcome Person");
+                        namastey = () => {
+                            console.log(this);
+                            console.log("Namastey");
+                        }
+                        namastey();
+                    }
+                }
+                // person.fullname();
+                // person.greet();
+                const module = {
+                    x: 42,
+                    getX: function () {
+                        return this.x;
+                    }
+                };
+        
+                const unboundGetX = module.getX;
+                console.log(unboundGetX());//undefined
+                const p = person.greet;
+                p();//x is undefined , this is window
+                const boundGetX = unboundGetX.bind(module);//bind creates new function
+                console.log(boundGetX());//42
+        
+                // console.log(varExpression);
+                // console.log(varArrow());
+                var varExpression = function () {
+                    return "I am function exp nd cannot be called ";
+                }
+                var varArrow = () => "I am arrow function nd cannot be called ";*/
+
+        /*
+function sum(a, b, c) {
+    console.log(a + b + c);
+}
+const numbers = [
+    prompt("number 1?"),
+    prompt('number 2?'),
+    prompt('number 3?'),
+];
+console.log(numbers);
+sum(...numbers);*/
+        const name = {
+            firstname: 'Priyanshi',
+            lastname: 'Chauhan'
+        }
+        const person = {
+            age: 23,
+            name,
+            welcome() {
+                console.log('Welcome');
+            }
+        }
+        for (let obj of person)
+            console.log(obj);
+    </script>
+</head>
+
+</html>
